@@ -14,6 +14,7 @@ CREATE TABLE "Website" (
     "id" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "off" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Website_pkey" PRIMARY KEY ("id")
 );
@@ -34,7 +35,7 @@ CREATE TABLE "WebsiteTicks" (
     "websiteId" TEXT NOT NULL,
     "validatorId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL,
-    "Status" "WebsiteStatus" NOT NULL,
+    "status" "WebsiteStatus" NOT NULL,
     "latency" DOUBLE PRECISION NOT NULL,
 
     CONSTRAINT "WebsiteTicks_pkey" PRIMARY KEY ("id")

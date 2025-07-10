@@ -40,7 +40,7 @@ model WebsiteTicks {
   websiteId   String
   validatorId String
   createdAt   DateTime
-  Status      WebsiteStatus
+  status      WebsiteStatus
   latency     Float
   website     Website   @relation(fields: [websiteId], references: [id])
   validator   Validator @relation(fields: [validatorId], references: [id])

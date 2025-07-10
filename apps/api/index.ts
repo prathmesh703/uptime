@@ -1,10 +1,12 @@
 import  express  from "express";
-import { authenticate } from "./Middleware";
+import { authMiddleware } from "./Middleware";
 import { prismaClient } from "db/client";
-
+import cors from "cors";
 
 const app = express();
-app.post("/api/v1/website", authenticate, async (req , res)=>{
+app.use(cors());
+app.use(express.json());
+app.post("/api/v1/website", authMiddleware, async (req , res)=>{
     const userId = req.userId;
     const { url } = req.body;
     const data = await prismaClient.website.create({
@@ -18,7 +20,7 @@ app.post("/api/v1/website", authenticate, async (req , res)=>{
     })
 });
 
-app.get("api/v1/website/status", authenticate, async (req, res) => {
+app.get("/api/v1/website/status", authMiddleware, async (req, res) => {
     const webId = req.query.websiteId! as unknown as string;
     const userId = req.userId;
     const data = await prismaClient.website.findFirst({
@@ -35,7 +37,7 @@ app.get("api/v1/website/status", authenticate, async (req, res) => {
     res.json(data);
 });
 
-app.get("api/v1/websites", authenticate, async (req, res)=>{
+app.get("/api/v1/websites", authMiddleware, async (req, res)=>{
     const userId = req.userId;
 
     const websites = await prismaClient.website.findMany({
@@ -50,7 +52,7 @@ app.get("api/v1/websites", authenticate, async (req, res)=>{
 
     res.json(websites);
 })
-app.delete("api/v1/website/", authenticate, async (req, res)=>{
+app.delete("/api/v1/website/", authMiddleware, async (req, res)=>{
     const websiteId = req.body.websiteId;
     const userId = req.userId;
 
@@ -68,4 +70,5 @@ app.delete("api/v1/website/", authenticate, async (req, res)=>{
         msg: " removed website successfully"
     })
 })
+console.log("server started");
 app.listen(3000);

@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import { 
   Shield, 
@@ -16,8 +17,10 @@ import {
   Mail,
   Slack
 } from 'lucide-react';
+import  { useRouter } from 'next/navigation';
 
 function App() {
+  const router = useRouter();
   return (
     <div className="min-h-screen bg-gray-900">
       
@@ -35,8 +38,8 @@ function App() {
               from multiple locations worldwide with our comprehensive monitoring platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <button className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-500 transition-all transform hover:scale-105 shadow-lg flex items-center">
-                Start 14-Day Free Trial
+              <button onClick={()=>{router.push('/dashboard')}} className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-500 transition-all transform hover:scale-105 shadow-lg flex items-center cursor-pointer">
+                  Start Monitoring
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
               <button className="text-gray-300 hover:text-white transition-colors flex items-center">
@@ -388,8 +391,8 @@ function App() {
             Join thousands of websites already using UptimeGuard to ensure maximum uptime and performance.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors font-semibold">
-              Start 14-Day Free Trial
+            <button onClick={()=>{router.push('/dashboard')}} className=" cursor-pointer bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors font-semibold">
+                Start Monitoring
             </button>
             <button className="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-semibold">
               Schedule Demo

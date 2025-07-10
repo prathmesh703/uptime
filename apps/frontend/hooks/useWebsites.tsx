@@ -3,15 +3,17 @@ import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+export interface WebsiteTick {
+    id : string, 
+    createdAt : string, 
+    status: string, 
+    latency: string, 
+}
+
 interface Website {
     id: string, 
     url : string, 
-    ticks : {
-        id : string, 
-        createdAt : string, 
-        status: string, 
-        latency: string, 
-    }, 
+    ticks : WebsiteTick[],
 }
 
 export function useWebsites(){
@@ -22,16 +24,16 @@ export function useWebsites(){
         const token = await getToken();
        const repsonse = await axios.get(`${BACKEND_URL}/api/v1/websites` , {
             headers:{
-                Authorization: token,
+                Authorization: `Bearer ${token}`,
             },
        });
-       setWebsites(repsonse.data.websites);
+       setWebsites(repsonse.data);
     }
 
     useEffect(()=>{
         refresh();
         const interval = setInterval(refresh, 1000*60*1); 
         return () => clearInterval(interval); 
-    })
-    return websites;
+    }, [])
+    return {websites , refresh};
 }

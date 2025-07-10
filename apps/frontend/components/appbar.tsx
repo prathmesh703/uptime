@@ -12,8 +12,8 @@ import {
   export function Appbar() {
    return  <ClerkProvider>
       <div className='flex justify-between items-center p-4 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50'>
-        <div>Uptime</div>
-        <div>
+        <div className='text-5xl md:text-4xl font-bold text-white align-center leading-tight'>Uptime</div>
+        <div className='flex content-center'>
           <SignedOut>
             <SignInButton />
             <SignUpButton>
