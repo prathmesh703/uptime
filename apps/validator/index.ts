@@ -11,11 +11,12 @@ async function main() {
     const keypair = Keypair.fromSecretKey(
         Uint8Array.from(JSON.parse(process.env.PRIVATE_KEY!))
     );    
-
+    console.log("keypair" , keypair);
     const ws = new WebSocket("ws://localhost:8080");
-
+    console.log("reached validator")
     ws.onmessage = async (event) =>{
         const data: OutgoingMessage = JSON.parse(event.data);
+        console.log("in");
         if(data.type === 'signup') {
             CALLBACKS[data.data.callbackId]?.(data.data)
             delete CALLBACKS[data.data.callbackId];
@@ -25,12 +26,13 @@ async function main() {
     }
 
     ws.onopen = async () =>{
+        console.log("2in");
         const callbackId = randomUUIDv7();
         CALLBACKS[callbackId] = (data: SignupOutgoingMessage) => {
             validatorId = data.validatorId;
         }
         const signedMessage = await sign(`message signed for ${keypair.publicKey}, ${callbackId}`, keypair);
-
+        
         ws.send(JSON.stringify({
             type: 'signup',
             data: {

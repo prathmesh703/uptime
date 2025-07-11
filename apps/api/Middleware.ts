@@ -21,5 +21,5 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     }
 
     req.userId = decoded.sub as string;
-    next()
+    next();
 }

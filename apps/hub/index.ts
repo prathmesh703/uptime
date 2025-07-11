@@ -5,9 +5,6 @@ import nacl from "tweetnacl";
 import nacl_util from "tweetnacl-util";
 import { PublicKey } from "@solana/web3.js";
 
-
-
-
 const validators: {validatorId: string, socket: ServerWebSocket<unknown>, publickey: string }[] =[];
 const CALLBACKS: {[callbackId: string]: (data: IncomingMessage) => void} = {}
 const COST_PER_VALIDATION = 100;
@@ -15,6 +12,7 @@ const COST_PER_VALIDATION = 100;
 
 Bun.serve({
     fetch(req, server) {
+        console.log("server");
         if(server.upgrade(req)){
             return;
         }
@@ -24,7 +22,7 @@ Bun.serve({
     websocket: {
         async message(ws: ServerWebSocket<unknown> , message: string){
             const data : IncomingMessage = JSON.parse(message);
-
+            console.log("reached hub");
             if(data.type ==='signup'){
                 const verified = await verifyMessage(
                     `message signed for ${data.data.publickey}, ${data.data.callbackId}`,
@@ -49,6 +47,7 @@ Bun.serve({
 })
 
 async function  signupHandler(ws: ServerWebSocket<unknown> , { callbackId,publickey,signedMessage,ip}: SignupIncomingMessage) {
+    console.log("signupHandler called with:", { publickey, callbackId, ip });
     const validatorinDB = await prismaClient.validator.findFirst({
         where:{
             publickey,
@@ -86,6 +85,7 @@ async function  signupHandler(ws: ServerWebSocket<unknown> , { callbackId,public
 }
 
 async function verifyMessage(signedMessage: string, publicKey: string, signature: string ){
+    console.log("verifyMessage called with:", { signedMessage, publicKey, signature });
     const messageByte = nacl_util.decodeUTF8(signedMessage);
     const result = nacl.sign.detached.verify(
          messageByte,
@@ -104,6 +104,7 @@ setInterval(async ()=>{
     for(const website of Websites){
         validators.forEach(validator => {
             const callbackId = randomUUIDv7();
+            console.log(`send validate request for ${website.url}`);
             validator.socket.send(JSON.stringify({
                 type:'validate',
                 data:{

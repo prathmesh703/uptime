@@ -70,5 +70,6 @@ app.delete("/api/v1/website/", authMiddleware, async (req, res)=>{
         msg: " removed website successfully"
     })
 })
+
 console.log("server started");
 app.listen(3000);

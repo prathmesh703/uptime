@@ -24,7 +24,7 @@ import { useAuth } from '@clerk/nextjs';
 interface AggregatedTick {
   windowStart: Date;
   windowEnd: Date;
-  status: 'Good' | 'Bad';
+  status: 'Good' | 'Bad' | 'unknown';
   avgLatency: number;
   tickCount: number;
 }
@@ -34,7 +34,7 @@ interface AggregatedTick {
 interface ProcessedWebsite {
   id: string;
   url: string;
-  status: 'Good' | 'Bad' | 'warning';
+  status: 'Good' | 'Bad' | 'unknown';
   uptime: number;
   responseTime: number;
   lastChecked: string;
@@ -98,11 +98,11 @@ const Dashboard: React.FC = () => {
           tickCount: windowTicks.length
         });
       } else {
-        // No data for this window - mark as down
+        // No data for this window - mark as unknown
         windows.push({
           windowStart,
           windowEnd,
-          status: 'Bad',
+          status: 'unknown',
           avgLatency: 0,
           tickCount: 0
         });
@@ -151,13 +151,15 @@ const Dashboard: React.FC = () => {
     // Determine current status
     const latestTick = ticksArray[ticksArray.length - 1];
     console.log("latesttick" ,latestTick);
-    let status: 'Good' | 'Bad' | 'warning' = 'Bad';
+    let status: 'Good' | 'Bad' | 'unknown' = 'unknown';
     
     if (latestTick) {
       if (latestTick.status === 'Good') {
         status = 'Good';
-      } else {
+      } else if (latestTick.status === 'Bad') {
         status = 'Bad';
+      } else {
+        status = 'unknown';
       }
     }
 
@@ -185,7 +187,7 @@ const Dashboard: React.FC = () => {
     switch (status) {
       case 'Good': return 'text-green-400';
       case 'Bad': return 'text-red-400';
-      case 'warning': return 'text-yellow-400';
+      case 'unknown': return 'text-gray-400';
       default: return 'text-gray-400';
     }
   };
@@ -194,7 +196,7 @@ const Dashboard: React.FC = () => {
     switch (status) {
       case 'Good': return 'bg-green-400';
       case 'Bad': return 'bg-red-400';
-      case 'warning': return 'bg-yellow-400';
+      case 'unknown': return 'bg-gray-400';
       default: return 'bg-gray-400';
     }
   };
@@ -413,9 +415,7 @@ const Dashboard: React.FC = () => {
                         {website.aggregatedTicks.map((tick, index) => (
                           <div
                             key={index}
-                            className={`w-6 h-10 rounded-sm ${
-                              tick.status === 'Good' ? 'bg-green-400' : 'bg-red-400'
-                            } hover:opacity-80 transition-all cursor-pointer shadow-sm hover:shadow-md transform hover:scale-105`}
+                            className={`w-6 h-10 rounded-sm ${getStatusBg(tick.status)} hover:opacity-80 transition-all cursor-pointer shadow-sm hover:shadow-md transform hover:scale-105`}
                             title={`${tick.windowStart.toLocaleTimeString()} - ${tick.windowEnd.toLocaleTimeString()}
 Status: ${tick.status}
 Avg Latency: ${tick.avgLatency.toFixed(0)}ms
