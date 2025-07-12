@@ -5,7 +5,7 @@ import nacl from "tweetnacl";
 import nacl_util from "tweetnacl-util";
 import { PublicKey } from "@solana/web3.js";
 
-const validators: {validatorId: string, socket: ServerWebSocket<unknown>, publickey: string }[] =[];
+const validators: {validatorId: string, socket: ServerWebSocket<unknown>, publicKey: string }[] =[];
 const CALLBACKS: {[callbackId: string]: (data: IncomingMessage) => void} = {}
 const COST_PER_VALIDATION = 100;
 
@@ -26,11 +26,13 @@ Bun.serve({
             if(data.type ==='signup'){
                 const verified = await verifyMessage(
                     `message signed for ${data.data.publickey}, ${data.data.callbackId}`,
-                    data.data.callbackId,
+                    data.data.publickey,
                     data.data.signedMessage
                 );
                 if(verified){
                     await signupHandler(ws, data.data);
+                } else {
+                    console.log("Signature verification failed for", data.data.publickey);
                 }
             }  else if( data.type === 'validate'){
                 const cb = CALLBACKS[data.data.callbackId];
@@ -64,24 +66,28 @@ async function  signupHandler(ws: ServerWebSocket<unknown> , { callbackId,public
         validators.push({
             validatorId: validatorinDB.id,
             socket:ws, 
-            publickey:validatorinDB.publickey
+            publicKey:validatorinDB.publickey
         })
         return;
     }
 
-    const newValidator = await prismaClient.validator.create({
-        data: { 
-            ip,
-            location:'Latur',
-            publickey
-        }
-    })
+    try {
+        const newValidator = await prismaClient.validator.create({
+            data: { 
+                ip,
+                location:'Latur',
+                publickey
+            }
+        })
 
-    validators.push({
-        validatorId: newValidator.id,
-        socket: ws,
-        publickey: newValidator.publickey
-    })
+        validators.push({
+            validatorId: newValidator.id,
+            socket: ws,
+            publicKey: newValidator.publickey
+        })
+    } catch (err) {
+        console.error("Failed to create validator:", err);
+    }
 }
 
 async function verifyMessage(signedMessage: string, publicKey: string, signature: string ){
@@ -118,7 +124,7 @@ setInterval(async ()=>{
                         const { validatorId, status, latency , signedMessage } = data.data;
                         const  verified = await verifyMessage(
                             `Reply to ${callbackId}`,
-                            validator.publickey,
+                            validator.publicKey,
                             signedMessage
                         );
                         if (!verified) {

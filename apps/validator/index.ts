@@ -31,6 +31,7 @@ async function main() {
         CALLBACKS[callbackId] = (data: SignupOutgoingMessage) => {
             validatorId = data.validatorId;
         }
+        console.log("Sending signup with publickey:", keypair.publicKey.toBase58());
         const signedMessage = await sign(`message signed for ${keypair.publicKey}, ${callbackId}`, keypair);
         
         ws.send(JSON.stringify({
@@ -38,7 +39,7 @@ async function main() {
             data: {
                 callbackId,
                 ip: '127.0.0.1',
-                publickey: keypair.publicKey, 
+                publickey: keypair.publicKey.toBase58(), 
                 signedMessage,
             },
         }));

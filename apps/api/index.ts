@@ -15,6 +15,8 @@ app.post("/api/v1/website", authMiddleware, async (req , res)=>{
             url
         }
     })
+    console.log("userId",userId);
+    console.log("data",data);
     res.json({
         id:data.id
     })
@@ -39,7 +41,7 @@ app.get("/api/v1/website/status", authMiddleware, async (req, res) => {
 
 app.get("/api/v1/websites", authMiddleware, async (req, res)=>{
     const userId = req.userId;
-
+    console.log("user", userId);
     const websites = await prismaClient.website.findMany({
         where:{
             userId, 

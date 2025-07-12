@@ -258,7 +258,7 @@ const Dashboard: React.FC = () => {
                       url: newWebsiteUrl,
                     }, {
                       headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: token
                       }
                     });
                     refresh();
