@@ -12,7 +12,7 @@ async function main() {
         Uint8Array.from(JSON.parse(process.env.PRIVATE_KEY!))
     );    
     console.log("keypair" , keypair);
-    const ws = new WebSocket("ws://localhost:8080");
+    const ws = new WebSocket("wss://uptime-hub.onrender.com");
     console.log("reached validator")
     ws.onmessage = async (event) =>{
         const data: OutgoingMessage = JSON.parse(event.data);
