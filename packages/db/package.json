@@ -17,6 +17,6 @@
     "prisma": "^6.10.1"
   },
   "prisma":{
-    "seed":"./prisma/seed.ts"
+    "schema":"./schema.prisma"
   }
 }
