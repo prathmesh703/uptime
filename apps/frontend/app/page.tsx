@@ -5,17 +5,12 @@ import {
   Zap, 
   Bell, 
   BarChart3, 
-  Clock, 
   Globe, 
   CheckCircle, 
   ArrowRight,
   Star,
-  Users,
-  TrendingUp,
   AlertTriangle,
   Smartphone,
-  Mail,
-  Slack
 } from 'lucide-react';
 import  { useRouter } from 'next/navigation';
 

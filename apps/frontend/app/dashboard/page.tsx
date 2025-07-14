@@ -1,7 +1,6 @@
 "use client"
 import React, { useState } from 'react';
 import {
-  Shield,
   Globe,
   Clock,
   AlertTriangle,
@@ -10,8 +9,6 @@ import {
   ChevronDown,
   ChevronUp,
   Plus,
-  Settings,
-  Bell,
   BarChart3,
   Zap,
   Calendar
@@ -48,12 +45,8 @@ const Dashboard: React.FC = () => {
   const {websites, refresh} = useWebsites();
   const {getToken } = useAuth();
 
-  console.log("websites from hook:", websites);
-
   // Function to aggregate ticks into 3-minute windows
   const aggregateTicksIntoWindows = (ticks: any[]): AggregatedTick[] => {
-   // if (!ticks || ticks.length === 0) return [];
-
     // Sort ticks by createdAt
     const sortedTicks = [...ticks].sort((a, b) => 
       new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
