@@ -1,5 +1,5 @@
 import type {OutgoingMessage, SignupOutgoingMessage, ValidateOutgoingMessage} from "common/client"
-import { randomUUIDv7 } from "bun";
+// Bun.randomUUIDv7 is available globally in Bun
 import { Keypair} from "@solana/web3.js";
 import nacl from "tweetnacl";
 import nacl_util from "tweetnacl-util";
@@ -26,7 +26,7 @@ async function main() {
 
     ws.onopen = async () =>{
         console.log("2in");
-        const callbackId = randomUUIDv7();
+        const callbackId = Bun.randomUUIDv7();
         CALLBACKS[callbackId] = (data: SignupOutgoingMessage) => {
             validatorId = data.validatorId;
         }
