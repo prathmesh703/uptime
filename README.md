@@ -18,3 +18,4 @@ A full-stack Uptime Monitoring application that allows users to track the status
 - 🧩 Modular backend with Express + Bun
 - 📊 Dashboard showing response trends
 
+**!! validator is not currently deployed. To test run validator locally**
