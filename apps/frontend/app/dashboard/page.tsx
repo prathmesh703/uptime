@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
   const {getToken } = useAuth();
 
   // Function to aggregate ticks into 3-minute windows
-  const aggregateTicksIntoWindows = (ticks: any[]): AggregatedTick[] => {
+  const aggregateTicksIntoWindows = (ticks: WebsiteTick[]): AggregatedTick[] => {
     // Sort ticks by createdAt
     const sortedTicks = [...ticks].sort((a, b) => 
       new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()

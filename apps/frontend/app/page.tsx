@@ -25,8 +25,8 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Monitor Your Website's
-              <span className="text-blue-400 block">Uptime & Performance</span>
+              Monitor Your Website&#39;s
+              <span className="text-blue-400 block">Uptime &amp; Performance</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
               Get instant alerts when your website goes down. Monitor uptime, performance, and user experience 
@@ -179,8 +179,8 @@ function App() {
               <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-white font-bold text-xl">3</span>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">Monitor & Relax</h3>
-              <p className="text-gray-400">We'll monitor your site 24/7 and alert you instantly if anything goes wrong.</p>
+              <h3 className="text-xl font-semibold text-white mb-4">Monitor &amp; Relax</h3>
+              <p className="text-gray-400">We&#39;ll monitor your site 24/7 and alert you instantly if anything goes wrong.</p>
             </div>
           </div>
         </div>
@@ -322,7 +322,7 @@ function App() {
                 ))}
               </div>
               <p className="text-gray-300 mb-6">
-                "UptimeGuard has been a game-changer for our business. We've reduced downtime by 90% and our customers are happier than ever."
+                &quot;UptimeGuard has been a game-changer for our business. We&#39;ve reduced downtime by 90% and our customers are happier than ever.&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
@@ -342,7 +342,7 @@ function App() {
                 ))}
               </div>
               <p className="text-gray-300 mb-6">
-                "The instant alerts saved us from a major outage. The setup was incredibly easy and the interface is beautiful."
+                &quot;The instant alerts saved us from a major outage. The setup was incredibly easy and the interface is beautiful.&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold">
@@ -362,7 +362,7 @@ function App() {
                 ))}
               </div>
               <p className="text-gray-300 mb-6">
-                "Best monitoring tool we've used. The global monitoring locations give us confidence that our site is truly accessible worldwide."
+                &quot;Best monitoring tool we&#39;ve used. The global monitoring locations give us confidence that our site is truly accessible worldwide.&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
