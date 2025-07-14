@@ -1,4 +1,5 @@
-import { randomUUIDv7,  type ServerWebSocket } from "bun";
+import {  type ServerWebSocket } from "bun";
+import { v7 as uuidv7 } from "uuid";
 import type {IncomingMessage, SignupIncomingMessage} from "common/client"
 import {prismaClient} from "db/client"
 import nacl from "tweetnacl";
@@ -109,7 +110,7 @@ setInterval(async ()=>{
     });
     for(const website of Websites){
         validators.forEach(validator => {
-            const callbackId = randomUUIDv7();
+            const callbackId = uuidv7();
             console.log(`send validate request for ${website.url}`);
             validator.socket.send(JSON.stringify({
                 type:'validate',
