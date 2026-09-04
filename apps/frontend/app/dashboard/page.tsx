@@ -11,7 +11,9 @@ import {
   Plus,
   BarChart3,
   Zap,
-  Calendar
+  Calendar,
+  Trash2,
+  LoaderCircle
 } from 'lucide-react';
 import { useWebsites, WebsiteTick } from '../../hooks/useWebsites';
 import axios from 'axios';
@@ -42,8 +44,27 @@ const Dashboard: React.FC = () => {
   const [expandedWebsite, setExpandedWebsite] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newWebsiteUrl, setNewWebsiteUrl] = useState("");
-  const {websites, refresh} = useWebsites();
+  const [websiteToDelete, setWebsiteToDelete] = useState<ProcessedWebsite | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const {websites, refresh, removeWebsite} = useWebsites();
   const {getToken } = useAuth();
+
+  const handleDeleteWebsite = async () => {
+    if (!websiteToDelete) return;
+    try {
+      setIsDeleting(true);
+      await removeWebsite(websiteToDelete.id);
+      setWebsiteToDelete(null);
+      if (expandedWebsite === websiteToDelete.id) {
+        setExpandedWebsite(null);
+      }
+    } catch (err) {
+      console.error("Failed to remove website:", err);
+      alert("Failed to remove website from monitoring. Please try again.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Function to aggregate ticks into 3-minute windows
   const aggregateTicksIntoWindows = (ticks: WebsiteTick[]): AggregatedTick[] => {
@@ -271,6 +292,66 @@ const Dashboard: React.FC = () => {
         </div>
       )}
       
+      {/* Delete Confirmation Modal */}
+      {websiteToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs">
+          <div className="bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-md relative mx-4">
+            <button
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors cursor-pointer"
+              onClick={() => !isDeleting && setWebsiteToDelete(null)}
+              aria-label="Close"
+              disabled={isDeleting}
+            >
+              <XCircle className="h-6 w-6" />
+            </button>
+
+            <div className="flex items-start space-x-4 mb-4">
+              <div className="p-3 bg-red-950/60 border border-red-800/50 rounded-xl text-red-400 shrink-0">
+                <AlertTriangle className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-white">Remove Website</h3>
+                <p className="text-gray-300 text-sm mt-1">
+                  Are you sure you want to stop monitoring{" "}
+                  <span className="font-semibold text-white break-all">{websiteToDelete.url}</span>?
+                </p>
+                <p className="text-gray-400 text-xs mt-2">
+                  This website will be removed from your dashboard and validators will stop checking its uptime.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-700/60">
+              <button
+                type="button"
+                className="px-4 py-2 rounded-lg bg-gray-700 text-gray-200 hover:bg-gray-600 transition-colors text-sm font-medium cursor-pointer disabled:opacity-50"
+                onClick={() => setWebsiteToDelete(null)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition-colors text-sm font-medium flex items-center cursor-pointer disabled:opacity-50"
+                onClick={handleDeleteWebsite}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <LoaderCircle className="h-4 w-4 mr-2 animate-spin" />
+                    Removing...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Remove Website
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Dashboard Header */}
         <div className="flex justify-between items-center mb-8">
@@ -382,6 +463,19 @@ const Dashboard: React.FC = () => {
                         <p className="text-sm text-gray-400">Last Checked</p>
                         <p className="text-white font-medium">{website.lastChecked}</p>
                       </div>
+
+                      <button
+                        type="button"
+                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-950/40 rounded-lg transition-colors cursor-pointer"
+                        title="Remove website"
+                        aria-label={`Remove ${website.url} from monitoring`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setWebsiteToDelete(website);
+                        }}
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
                       
                       {expandedWebsite === website.id ? 
                         <ChevronUp className="h-5 w-5 text-gray-400" /> : 

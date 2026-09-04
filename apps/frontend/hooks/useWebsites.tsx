@@ -30,10 +30,23 @@ export function useWebsites(){
        setWebsites(repsonse.data);
     }
 
+    async function removeWebsite(websiteId: string) {
+        const token = await getToken();
+        await axios.delete(`${BACKEND_URL}/api/v1/website`, {
+            headers: {
+                Authorization: token,
+            },
+            data: {
+                websiteId,
+            },
+        });
+        await refresh();
+    }
+
     useEffect(()=>{
         refresh();
         const interval = setInterval(refresh, 1000*60*1); 
         return () => clearInterval(interval); 
     }, [])
-    return {websites , refresh};
+    return {websites, refresh, removeWebsite};
 }

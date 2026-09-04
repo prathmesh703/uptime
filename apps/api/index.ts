@@ -54,24 +54,45 @@ app.get("/api/v1/websites", authMiddleware, async (req, res)=>{
 
     res.json(websites);
 })
-app.delete("/api/v1/website/", authMiddleware, async (req, res)=>{
-    const websiteId = req.body.websiteId;
-    const userId = req.userId;
+app.delete(["/api/v1/website", "/api/v1/website/", "/api/v1/website/:websiteId"], authMiddleware, async (req, res) => {
+    try {
+        const websiteId = (req.params?.websiteId || req.body?.websiteId || req.query?.websiteId) as string;
+        const userId = req.userId;
 
-    await prismaClient.website.update({
+        if (!websiteId) {
+            res.status(400).json({ error: "websiteId is required" });
+            return;
+        }
+
+        const website = await prismaClient.website.findFirst({
+            where: {
+                id: websiteId,
+                userId,
+            },
+        });
+
+        if (!website) {
+            res.status(404).json({ error: "Website not found" });
+            return;
+        }
+
+        await prismaClient.website.update({
         where:{
             id : websiteId, 
-            userId
-        }, 
-        data:{
-            off : true
-        }
-    })
+            },
+            data: {
+                off: true,
+            },
+        });
 
-    res.json({
-        msg: " removed website successfully"
-    })
-})
+        res.json({
+            msg: "removed website successfully",
+        });
+    } catch (err) {
+        console.error("Error removing website:", err);
+        res.status(500).json({ error: "Failed to remove website" });
+    }
+});
 
 console.log("server started");
 app.listen(3000);
