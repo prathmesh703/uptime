@@ -15,7 +15,7 @@ async function main() {
     console.log("reached validator")
     ws.onmessage = async (event) =>{
         const data: OutgoingMessage = JSON.parse(event.data);
-        console.log("in");
+        console.log("inn");
         if(data.type === 'signup') {
             CALLBACKS[data.data.callbackId]?.(data.data)
             delete CALLBACKS[data.data.callbackId];
@@ -95,6 +95,3 @@ async function sign(message:string, keypair: Keypair) {
 }
 
 main();
-
-setInterval( async () =>{
-}, 10000);
