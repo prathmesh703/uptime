@@ -52,7 +52,12 @@ async function validateHandler(ws: WebSocket, {url, callbackId, websiteId}: Vali
     const signature = await sign(`Reply to ${callbackId}` , keypair);
 
     try {
-        const response = await fetch(url);
+        let normalizedUrl = url;
+        if (!normalizedUrl.startsWith("http://") && !normalizedUrl.startsWith("https://")) {
+            normalizedUrl = `https://${normalizedUrl}`;
+        }
+
+        const response = await fetch(normalizedUrl);
         const endtime = Date.now();
         const latency = endtime - startTime;
         const status = response.status;
@@ -75,7 +80,7 @@ async function validateHandler(ws: WebSocket, {url, callbackId, websiteId}: Vali
             data: {
                 callbackId,
                 status:'Bad',
-                latency: 1000,
+                latency: Date.now()-startTime,
                 websiteId,
                 validatorId,
                 signedMessage: signature,

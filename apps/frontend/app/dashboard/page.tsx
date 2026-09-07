@@ -90,10 +90,8 @@ const Dashboard: React.FC = () => {
       // Find all ticks within this window
       const windowTicks = sortedTicks.filter(tick => {
         const tickTime = new Date(tick.createdAt);
-        console.log("tick:", tick.createdAt, "| tickTs:", tickTime, "| inWindow:", tickTime >= thirtyMinutesAgo && tickTime <= now);
         return tickTime >= windowStart && tickTime < windowEnd;
       });
-      console.log("windowticks",windowTicks)
 
       if (windowTicks.length > 0) {
         // Calculate aggregated values
