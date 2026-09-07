@@ -7,12 +7,14 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     console.log("token", token);
     if (!token) {
         console.log("error in logging");
-        return res.status(401).json({ error: "error in logging" })
+        res.status(401).json({ error: "error in logging" });
+        return;
     }
     const decoded = jwt.verify(token, JWT_TOKEN);
     console.log(decoded);
     if (!decoded || !decoded.sub) {
-        return res.status(401).json({ error: "unauthorized" });
+        res.status(401).json({ error: "unauthorized" });
+        return;
     }
 
     req.userId = decoded.sub as string;
